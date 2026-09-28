@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DEUS — Autonomous AI Trading Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06080a;--s:#0e1216;--s2:#151b21;--bd:#232c35;--ac:#c6f24e;--ac2:#4ade80;--tx:#f2f6fa;--t2:#9aa6b5;--t3:#66768a;--red:#f25e5e;--amb:#fbbf24;color-scheme:dark;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
+h1,h2,h3{letter-spacing:-.03em;line-height:1.08}
+h2{font-size:clamp(2rem,4.4vw,3.2rem);font-weight:700;margin-bottom:14px}
+.lead{color:var(--t2);max-width:640px}
+section{padding:110px 0;position:relative}
+.grad{background:linear-gradient(100deg,#fff 0%,var(--ac) 35%,#7dffb2 55%,#fff 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+/* nav */
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;padding:14px 0;backdrop-filter:blur(18px);background:rgba(6,8,10,.6);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-weight:800;letter-spacing:.14em;font-size:1.3rem}.logo i{color:var(--ac);font-style:normal;animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.25}}
+.links{display:flex;gap:26px;font-size:.85rem;color:var(--t2)}.links a{color:inherit;text-decoration:none;transition:.2s}.links a:hover{color:var(--ac)}
+/* buttons */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:14px 30px;border-radius:60px;font:600 .95rem 'Sora',sans-serif;border:1px solid var(--bd);background:transparent;color:var(--tx);cursor:pointer;text-decoration:none;transition:transform .25s,box-shadow .25s,border-color .25s}
+.btn:hover{border-color:var(--ac)}
+.btn.p{background:var(--ac);color:#0a0d05;border-color:var(--ac);box-shadow:0 0 0 0 rgba(198,242,78,.5);animation:halo 2.6s infinite}
+.btn.p::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg);animation:sweep 3.2s infinite}
+@keyframes sweep{0%,55%{left:-80%}100%{left:140%}}
+@keyframes halo{70%{box-shadow:0 0 0 16px rgba(198,242,78,0)}100%{box-shadow:0 0 0 0 rgba(198,242,78,0)}}
+.btn.sm{padding:9px 20px;font-size:.82rem}
+/* hero */
+.hero{min-height:100vh;display:flex;align-items:center;padding:130px 0 70px;overflow:hidden}
+#net{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.aur{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35;z-index:0;animation:drift 14s ease-in-out infinite alternate}
+.a1{width:520px;height:520px;background:#5b8a00;top:-10%;right:-8%}
+.a2{width:420px;height:420px;background:#0d6e5a;bottom:-12%;left:-6%;animation-delay:-6s}
+@keyframes drift{to{transform:translate(-60px,50px) scale(1.2)}}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;color:var(--ac);padding:6px 14px;border:1px solid rgba(198,242,78,.3);border-radius:40px;background:rgba(198,242,78,.07);margin-bottom:22px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ac);animation:ping 1.4s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(198,242,78,.7)}100%{box-shadow:0 0 0 10px transparent}}
+h1{font-size:clamp(2.6rem,6.2vw,5rem);font-weight:800}
+h1 span{display:block;overflow:hidden}h1 span b{display:inline-block;transform:translateY(110%);animation:rise .9s cubic-bezier(.2,.9,.2,1) forwards}
+h1 span:nth-child(2) b{animation-delay:.12s}h1 span:nth-child(3) b{animation-delay:.24s}
+@keyframes rise{to{transform:none}}
+.hero p.lead{margin:24px 0 32px;font-size:1.1rem;opacity:0;animation:fade 1s .6s forwards}
+.cta{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fade 1s .8s forwards}
+@keyframes fade{to{opacity:1}}
+/* orbit */
+.orbit{position:relative;width:min(440px,90vw);aspect-ratio:1;margin:auto}
+.ring{position:absolute;inset:0;border:1px dashed rgba(198,242,78,.25);border-radius:50%;animation:spin 40s linear infinite}
+.ring.r2{inset:16%;animation-duration:26s;animation-direction:reverse;border-color:rgba(74,222,128,.25)}
+.ring.r3{inset:32%;animation-duration:18s;border-style:solid;border-color:rgba(198,242,78,.12)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.core{position:absolute;inset:39%;border-radius:50%;background:radial-gradient(circle,#e8ff9c,var(--ac) 45%,#3d5c00);display:grid;place-items:center;font-weight:800;color:#0a0d05;font-size:1rem;letter-spacing:.1em;animation:breathe 3s ease-in-out infinite;box-shadow:0 0 70px rgba(198,242,78,.55)}
+@keyframes breathe{50%{transform:scale(1.08);box-shadow:0 0 110px rgba(198,242,78,.8)}}
+.node{position:absolute;top:50%;left:50%;width:0;height:0;animation:spin 40s linear infinite}
+.node i{position:absolute;width:12px;height:12px;margin:-6px;border-radius:50%;background:var(--ac);box-shadow:0 0 14px var(--ac);transform:translateX(var(--r))}
+.node.in{animation-duration:26s;animation-direction:reverse}.node.in i{background:var(--ac2);box-shadow:0 0 14px var(--ac2)}
+/* ticker */
+.tick{border-block:1px solid var(--bd);background:var(--s);overflow:hidden;padding:14px 0;white-space:nowrap}
+.tick div{display:inline-flex;gap:46px;animation:mq 34s linear infinite;padding-left:46px}
+.tick:hover div{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.tick span{font:600 .82rem 'JetBrains Mono',monospace;color:var(--t2)}.up{color:var(--ac2)}.dn{color:var(--red)}
+/* cards */
+.card{position:relative;background:var(--s);border:1px solid var(--bd);border-radius:22px;padding:28px;overflow:hidden;transition:transform .25s ease,border-color .3s;transform-style:preserve-3d}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(198,242,78,.14),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.card:hover{border-color:rgba(198,242,78,.5)}.card:hover::before{opacity:1}
+.grid{display:grid;gap:18px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}
+.big{font-size:clamp(2.4rem,5vw,3.6rem);font-weight:800;color:var(--ac);line-height:1}
+.lbl{color:var(--t3);font-size:.8rem;margin-top:8px}
+/* council */
+.console{background:#040607;border:1px solid var(--bd);border-radius:18px;padding:20px;height:330px;overflow:auto;font:.8rem/1.8 'JetBrains Mono',monospace;color:var(--t2)}
+.console div{animation:fade .4s both}.console em{font-style:normal;color:var(--t3);margin-right:8px}
+.info{color:#60a5fa}.ok{color:var(--ac2)}.wr{color:var(--amb)}.er{color:var(--red)}
+.vote{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd);font-size:.88rem;color:var(--t2)}
+.vote b{font-size:.72rem;padding:4px 12px;border-radius:30px;background:rgba(255,255,255,.05);color:var(--t3);transition:.4s}
+.vote b.y{background:rgba(74,222,128,.14);color:var(--ac2)}.vote b.n{background:rgba(242,94,94,.14);color:var(--red)}
+/* agents */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
+.f{padding:8px 18px;border-radius:30px;border:1px solid var(--bd);background:transparent;color:var(--t2);font:500 .8rem 'Sora',sans-serif;cursor:pointer;transition:.25s}
+.f.on,.f:hover{background:var(--ac);color:#0a0d05;border-color:var(--ac)}
+.ag{animation:pop .5s both}@keyframes pop{from{opacity:0;transform:scale(.92) translateY(14px)}}
+.ag small{color:var(--ac);font:600 .72rem 'JetBrains Mono',monospace}.ag h3{font-size:1.05rem;margin:14px 0 8px}.ag p{font-size:.82rem;color:var(--t2)}
+/* loop */
+.loop{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin:44px 0}
+.loop::before{content:'';position:absolute;top:26px;left:4%;right:4%;height:2px;background:linear-gradient(90deg,var(--ac) var(--p,0%),var(--bd) var(--p,0%));transition:.1s}
+.st{text-align:center;position:relative}.st b{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 14px;border-radius:50%;background:var(--bg);border:2px solid var(--bd);color:var(--t3);font-weight:700;transition:.5s}
+.st.on b{border-color:var(--ac);color:var(--ac);box-shadow:0 0 24px rgba(198,242,78,.4)}
+.st h3{font-size:.92rem;margin-bottom:6px}.st p{font-size:.74rem;color:var(--t3)}
+.rule{background:#040607;border-left:3px solid var(--ac);border-radius:14px;padding:24px;font:.86rem/1.9 'JetBrains Mono',monospace;color:#cbd5e1;min-height:250px;white-space:pre-wrap}
+.rule .c{display:inline-block;width:8px;height:1em;background:var(--ac);vertical-align:-2px;animation:blink 1s infinite}
+/* chart */
+.chart svg{width:100%;height:auto;display:block}
+.line{fill:none;stroke:var(--ac);stroke-width:3;stroke-linecap:round;stroke-dasharray:1600;stroke-dashoffset:1600}
+.chart.vis .line{animation:draw 2.8s ease forwards}.area{fill:url(#ag);opacity:0}.chart.vis .area{animation:fade 1s 2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+/* compare */
+table{width:100%;border-collapse:collapse}th,td{padding:18px 22px;text-align:left;border-bottom:1px solid var(--bd);font-size:.92rem}
+th{font-size:.8rem;color:var(--t3)}td:first-child{color:var(--t2)}td:last-child{color:var(--ac)}
+tbody tr{transition:background .3s}tbody tr:hover{background:rgba(198,242,78,.05)}
+/* risk */
+.meter{height:8px;border-radius:8px;background:var(--s2);overflow:hidden;margin:10px 0 18px}.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac2),var(--ac));border-radius:8px;transition:width 1.6s cubic-bezier(.2,.9,.2,1)}
+.row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--t2)}
+/* final */
+.final{text-align:center;overflow:hidden;background:radial-gradient(ellipse at 50% 100%,rgba(198,242,78,.16),transparent 60%)}
+.final h2{font-size:clamp(2.4rem,6vw,4.6rem);max-width:900px;margin:0 auto 18px}
+footer{border-top:1px solid var(--bd);padding:36px 0;color:var(--t3);font-size:.8rem}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+/* modal */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:.35s;padding:20px}
+.modal.open{opacity:1;pointer-events:auto}
+.box{width:min(440px,100%);background:var(--s);border:1px solid rgba(198,242,78,.4);border-radius:26px;padding:34px;transform:translateY(30px) scale(.96);transition:.4s cubic-bezier(.2,.9,.2,1);box-shadow:0 0 80px rgba(198,242,78,.15)}
+.modal.open .box{transform:none}
+.box input{width:100%;margin:8px 0;padding:14px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--bd);color:var(--tx);font:inherit;outline:none;transition:.25s}
+.box input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(198,242,78,.15)}
+.x{float:right;background:none;border:none;color:var(--t3);font-size:1.4rem;cursor:pointer}
+.float{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;transform:translateY(120px);transition:.5s}.float.show{transform:none}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s,transform .9s cubic-bezier(.2,.9,.2,1);transition-delay:var(--d,0s)}.rv.vis{opacity:1;transform:none}
+:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+@media(max-width:900px){.hero-grid,.g2{grid-template-columns:1fr}.g4,.g3{grid-template-columns:1fr 1fr}.loop{grid-template-columns:1fr 1fr}.loop::before{display:none}.links{display:none}section{padding:80px 0}.orbit{margin-top:20px}}
+@media(max-width:560px){.g4,.g3{grid-template-columns:1fr}th,td{padding:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.rv{opacity:1;transform:none}h1 span b{transform:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap nav">
+  <div class="logo">DEUS<i>.</i></div>
+  <div class="links"><a href="#council">Council</a><a href="#agents">Agents</a><a href="#learning">Learning</a><a href="#moat">Moat</a><a href="#risk">Risk</a></div>
+  <button class="btn p sm" data-get>Get DEUS</button>
+</div></nav>
+
+<header class="hero">
+  <canvas id="net"></canvas><div class="aur a1"></div><div class="aur a2"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="pill"><span class="dot"></span>LIVE · DEUS-1 ONLINE</div>
+      <h1><span><b class="grad">Decision</b></span><span><b class="grad">Execution</b></span><span><b class="grad">Uniform Strategy</b></span></h1>
+      <p class="lead">The autonomous AI trading command center. Twelve specialist agents debate, one accountable verdict is issued, and every loss becomes a rule. Built on a model we own.</p>
+      <div class="cta"><button class="btn p" data-get>Get DEUS</button><button class="btn" id="demoBtn">Run live council</button></div>
+    </div>
+    <div class="orbit" aria-hidden="true">
+      <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+      <div class="core">DEUS-1</div>
+      <div id="nodes"></div>
+    </div>
+  </div>
+</header>
+
+<div class="tick" aria-hidden="true"><div id="tk"></div></div>
+
+<section><div class="wrap">
+  <div class="grid g4" id="stats"></div>
+</div></section>
+
+<section id="council" style="background:var(--s)"><div class="wrap">
+  <div class="rv"><h2>Intelligence should <span class="grad">debate before it acts.</span></h2><p class="lead">Watch a council session. Specialists argue, the Risk Officer can veto, and one verdict goes out.</p></div>
+  <div class="grid g2 rv" style="margin-top:40px">
+    <div class="console" id="con"><div><em>--:--:--</em>Press “Run live council” to start a session.</div></div>
+    <div class="card">
+      <div class="vote">Market Analyst<b id="v0">WAITING</b></div>
+      <div class="vote">News & Sentiment Scout<b id="v1">WAITING</b></div>
+      <div class="vote">Risk Officer<b id="v2">WAITING</b></div>
+      <div class="vote">Strategy Analyst<b id="v3">WAITING</b></div>
+      <div class="vote" style="border:none"><span style="color:var(--tx);font-weight:700">Verdict</span><b id="v4">PENDING</b></div>
+      <button class="btn p" style="margin-top:18px;width:100%;justify-content:center" id="runBtn">Run live council</button>
+    </div>
+  </div>
+</div></section>
+
+<section id="agents"><div class="wrap">
+  <div class="rv"><h2>Twelve specialists. <span class="grad">One chain of command.</span></h2></div>
+  <div class="filters rv" id="filters"></div>
+  <div class="grid g4" id="ag"></div>
+</div></section>
+
+<section id="learning" style="background:var(--s)"><div class="wrap">
+  <div class="rv"><h2>A loss is data. <span class="grad">DEUS learns from it.</span></h2><p class="lead">The Post-Mortem Analyst reconstructs the decision, attributes the cause and writes a blocking rule, so the same mistake cannot happen twice.</p></div>
+  <div class="loop rv" id="loop"></div>
+  <div class="grid g2">
+    <div class="rule rv" id="rule"></div>
+    <div class="grid rv" style="align-content:start">
+      <div class="card"><div class="big" data-n="128">0</div><div class="lbl">Losses reviewed, every one attributed</div></div>
+      <div class="card"><div class="big" data-n="17">0</div><div class="lbl">Entries blocked by learning before an order was placed</div></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="moat"><div class="wrap">
+  <div class="rv"><h2>A rented brain <span class="grad">is not a moat.</span></h2><p class="lead">Anyone can wrap an API. We built the model.</p></div>
+  <div class="card rv" style="padding:0;margin-top:36px"><table>
+    <thead><tr><th>A GENERAL-PURPOSE LLM API</th><th>DEUS-1</th></tr></thead>
+    <tbody>
+      <tr><td>Trained on the open internet</td><td>Trained on market structure and market language</td></tr>
+      <tr><td>Your positions leave your building</td><td>Reasoning and positions stay inside DEUS</td></tr>
+      <tr><td>Knowledge frozen at a training cutoff</td><td>Retrained on the sessions and outcomes it observes</td></tr>
+      <tr><td>Behaviour set by a vendor</td><td>Behaviour, tuning and roadmap controlled by us</td></tr>
+      <tr><td>One model asked to do everything</td><td>One specialist model powering twelve agents</td></tr>
+    </tbody></table></div>
+  <div class="card chart rv" id="chart" style="margin-top:18px">
+    <div class="row" style="margin-bottom:12px"><span>Illustrative equity curve</span><span class="up mono">+₹15.97 today</span></div>
+    <svg viewBox="0 0 800 220" preserveAspectRatio="none"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c6f24e" stop-opacity=".35"/><stop offset="1" stop-color="#c6f24e" stop-opacity="0"/></linearGradient></defs>
+    <path class="area" d="M0 200 L60 180 130 190 200 140 270 155 340 100 410 120 480 70 550 90 620 45 700 60 800 15 L800 220 L0 220Z"/>
+    <path class="line" d="M0 200 L60 180 130 190 200 140 270 155 340 100 410 120 480 70 550 90 620 45 700 60 800 15"/></svg>
+  </div>
+</div></section>
+
+<section id="risk" style="background:var(--s)"><div class="wrap">
+  <div class="rv"><h2>Autonomy inside <span class="grad">the perimeter.</span></h2><p class="lead">A hard risk perimeter is validated before every order. The operator keeps the kill switch.</p></div>
+  <div class="grid g3 rv" style="margin-top:36px">
+    <div class="card"><div class="row"><span>Daily exposure</span><span class="mono">22%</span></div><div class="meter"><i data-w="22"></i></div><div class="row"><span>Circuit breaker</span><span class="up mono">ALLOW</span></div></div>
+    <div class="card"><div class="row"><span>Position controls</span><span class="mono">64%</span></div><div class="meter"><i data-w="64"></i></div><div class="row"><span>Stop-loss on every order</span><span class="up mono">CONFIRMED</span></div></div>
+    <div class="card"><div class="row"><span>Execution window</span><span class="mono">41%</span></div><div class="meter"><i data-w="41"></i></div><div class="row"><span>Kill switch</span><span class="up mono">ARMED</span></div></div>
+  </div>
+</div></section>
+
+<section class="final"><div class="wrap rv">
+  <h2><span class="grad">Your AI workforce for the markets.</span></h2>
+  <p class="lead" style="margin:0 auto 34px">Don't just watch the market. Command it with DEUS.</p>
+  <button class="btn p" style="font-size:1.1rem;padding:18px 44px" data-get>Get DEUS</button>
+</div></section>
+
+<footer><div class="wrap"><span>© 2026 DEUS. All rights reserved.</span><span>Supervisable by design. Broker-routed execution. Full audit trail per position.</span></div></footer>
+
+<button class="btn p float" id="fl" data-get>Get DEUS</button>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Get DEUS"><div class="box">
+  <button class="x" id="close" aria-label="Close">×</button>
+  <div id="m1"><h3 style="font-size:1.6rem;margin-bottom:8px">Get DEUS</h3><p class="lead" style="font-size:.9rem;margin-bottom:16px">Tell us where to reach you and we'll set up your desk.</p>
+    <input id="nm" placeholder="Your name" autocomplete="name"><input id="em" type="email" placeholder="Email or WhatsApp number">
+    <button class="btn p" id="send" style="width:100%;justify-content:center;margin-top:12px">Request access</button></div>
+  <div id="m2" hidden style="text-align:center;padding:20px 0"><div class="big" style="font-size:3rem">✓</div><h3 style="margin:14px 0 6px">Request received</h3><p class="lead" style="font-size:.9rem;margin:auto">We'll be in touch shortly.</p></div>
+</div></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+/* particle network */
+(()=>{const c=$('#net'),x=c.getContext('2d');let w,h,P=[],m={x:-999,y:-999};
+const rs=()=>{w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;P=Array.from({length:Math.min(90,w/12)},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}))};
+rs();addEventListener('resize',rs);c.parentElement.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();m.x=e.clientX-r.left;m.y=e.clientY-r.top});
+(function f(){x.clearRect(0,0,w,h);P.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;
+const dm=Math.hypot(p.x-m.x,p.y-m.y);if(dm<140){p.x+=(p.x-m.x)*.012;p.y+=(p.y-m.y)*.012}
+x.fillStyle='rgba(198,242,78,.7)';x.beginPath();x.arc(p.x,p.y,1.6,0,7);x.fill();
+for(let j=i+1;j<P.length;j++){const q=P[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<120){x.strokeStyle=`rgba(198,242,78,${.16*(1-d/120)})`;x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}});
+if(!RM)requestAnimationFrame(f)})()})();
+/* orbit nodes */
+$('#nodes').innerHTML=Array.from({length:12},(_,i)=>{const o=i<7;return `<div class="node ${o?'':'in'}" style="transform:rotate(${(i%7)*(360/(o?7:5))}deg)"><i style="--r:${o?'min(220px,45vw)':'min(154px,32vw)'}"></i></div>`}).join('');
+/* ticker */
+const sy=[['NIFTY','+0.17'],['BANKNIFTY','-0.08'],['TITAN','+1.42'],['RELIANCE','+0.36'],['SBFC','-0.91'],['HDFCBANK','+0.22'],['INFY','+0.64'],['SENSEX','+0.12'],['GOLD','+0.31'],['CRUDE','-0.27']];
+const tk=sy.map(([a,b])=>`<span>${a} <span class="${b[0]=='+'?'up':'dn'}">${b[0]=='+'?'▲':'▼'} ${b.slice(1)}%</span></span>`).join('');$('#tk').innerHTML=tk+tk;
+/* stats */
+$('#stats').innerHTML=[['12','Specialist agents'],['41','Blocking rules from real losses'],['0','Repeat-cause losses'],['100','% in-house model']].map(([n,l],i)=>`<div class="card rv" style="--d:${i*.1}s"><div class="big" data-n="${n}">0</div><div class="lbl">${l}</div></div>`).join('');
+/* agents */
+const A=[['Market Analyst','intelligence','Price action, technical conditions, volume and market structure.'],['News & Sentiment Scout','intelligence','News, events, earnings, macro developments and sentiment.'],['Risk Officer','risk','Exposure, budget, breakers and position locks. Holds veto authority.'],['Strategy Analyst','execution','Strategy evaluation, historical performance and attribution.'],['Trading Assistant','execution','Market data, order workflow and execution systems.'],['Ledger Keeper','execution','Trade history, journals and broker reconciliation.'],['Operations Coordinator','execution','Coordinates scheduled and event-driven workflows.'],['Sentinel','risk','Monitors operational health and detects issues.'],['Wide Scanner','intelligence','Searches opportunities across large asset universes.'],['Post-Mortem Analyst','learning','Dissects every loss, attributes cause, authors rules.'],['Comms Relay','execution','Delivers P&L, trades and alerts to WhatsApp.'],['Command Agent','risk','Owns the mandate, tooling and approvals across the ecosystem.']];
+$('#filters').innerHTML=['all','intelligence','risk','execution','learning'].map((f,i)=>`<button class="f ${i?'':'on'}" data-f="${f}">${f[0].toUpperCase()+f.slice(1)}</button>`).join('');
+function agents(f){$('#ag').innerHTML=A.map((a,i)=>[a,i]).filter(([a])=>f=='all'||a[1]==f).map(([a,i],k)=>`<div class="card ag" style="animation-delay:${k*.05}s"><small>${String(i+1).padStart(2,'0')}</small><h3>${a[0]}</h3><p>${a[2]}</p></div>`).join('');tilt()}
+$('#filters').onclick=e=>{const b=e.target.closest('.f');if(!b)return;$$('.f').forEach(x=>x.classList.remove('on'));b.classList.add('on');agents(b.dataset.f)};
+/* spotlight + tilt */
+function tilt(){$$('.card').forEach(c=>{if(c._t)return;c._t=1;c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;c.style.setProperty('--mx',px*100+'%');c.style.setProperty('--my',py*100+'%');if(!RM&&c.classList.contains('ag'))c.style.transform=`perspective(700px) rotateX(${(.5-py)*8}deg) rotateY(${(px-.5)*10}deg) translateY(-4px)`});c.addEventListener('mouseleave',()=>c.style.transform='')})}
+/* loop */
+const L=[['Outcome captured','Scored against the thesis that opened it.'],['Cause attributed','Signal, timing, sizing, regime, execution or news.'],['Rule written','A blocking condition with an ID and rationale.'],['Validated on history','Re-tested on past sessions before going live.'],['Enforced in council','The rule vetoes candidates in real time.'],['Capital re-weighted','Working strategies get more room.']];
+$('#loop').innerHTML=L.map((s,i)=>`<div class="st"><b>${i+1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('');
+let lt;function runLoop(){clearInterval(lt);let i=0;const st=$$('.st');st.forEach(s=>s.classList.remove('on'));lt=setInterval(()=>{if(i>=6){setTimeout(runLoop,2500);clearInterval(lt);return}st[i].classList.add('on');$('#loop').style.setProperty('--p',(i/5*92+4)+'%');i++},700)}
+/* typed rule */
+const RT=`// ANATOMY OF A LEARNED RULE\nLR-041 authored by Post-Mortem Analyst\n\nIF   gap_open > 0.8% AND time < 09:20\nTHEN block_entry\n\ncause    first-range whipsaw, 3 occurrences\norigin   SBFC, ₹1,412, 2026-08-28\nverified 250 historical sessions\nstatus   ENFORCED`;
+function typeRule(){const el=$('#rule');let i=0;if(RM){el.textContent=RT;return}(function t(){el.innerHTML=RT.slice(0,i).replace(/LR-041|ENFORCED|block_entry/g,'<span style="color:var(--ac)">$&</span>')+'<span class="c"></span>';if(i++<RT.length)setTimeout(t,22)})()}
+/* council */
+let busy=0;
+function council(){if(busy)return;busy=1;const c=$('#con');c.innerHTML='';['v0','v1','v2','v3','v4'].forEach(v=>{const e=$('#'+v);e.className='';e.textContent=v=='v4'?'PENDING':'WAITING'});
+$('#council').scrollIntoView({behavior:'smooth'});
+const S=[[0,'14:31:05','info','[COUNCIL] Session started. 4 specialists present.'],[0,'14:31:06','info','[MARKET ANALYST] NIFTY +0.17%, regime: choppy pause.',['v0','y','YES']],[0,'14:31:07','wr','[RISK OFFICER] Broker sync mismatch flagged: ₹1,347.20 vs ₹1,349.40.'],[0,'14:31:08','info','[NEWS SCOUT] No major macro events. Oil stable.',['v1','y','YES']],[0,'14:31:09','er','[RISK OFFICER] VETO: SBFC blocked by learned rule LR-041.',['v2','n','VETO']],[0,'14:31:10','info','[STRATEGY ANALYST] TITAN entry logic matches tested setup.',['v3','y','YES']],[0,'14:31:11','ok','[CHAIR] CONFIRM: LONG TITAN. Relay to dispatch.',['v4','y','CONFIRM']],[0,'14:31:12','info','[COMMS RELAY] Fill dispatched to WhatsApp. Order TX-9921.']];
+S.forEach((l,i)=>setTimeout(()=>{const d=document.createElement('div');d.innerHTML=`<em>${l[1]}</em><span class="${l[2]}">${l[3]}</span>`;c.appendChild(d);c.scrollTop=c.scrollHeight;if(l[4]){const e=$('#'+l[4][0]);e.className=l[4][1];e.textContent=l[4][2]}if(i==S.length-1)busy=0},i*750))}
+$('#runBtn').onclick=council;$('#demoBtn').onclick=council;
+/* counters + reveal */
+function count(el){const n=+el.dataset.n;if(el._d)return;el._d=1;if(RM){el.textContent=n;return}const t0=performance.now();(function s(t){const p=Math.min((t-t0)/1600,1);el.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(s)})(t0)}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;t.classList.add('vis');$$('[data-n]').forEach(n=>t.contains(n)&&count(n));if(t.id=='chart')t.classList.add('vis');if(t.id=='loop')runLoop();if(t.id=='rule')typeRule();t.querySelectorAll('[data-w]').forEach(m=>m.style.width=m.dataset.w+'%');io.unobserve(t)}),{threshold:.2});
+/* modal + floating cta */
+const md=$('#modal'),open=()=>{md.classList.add('open');$('#m1').hidden=0;$('#m2').hidden=1;setTimeout(()=>$('#nm').focus(),300)};
+$$('[data-get]').forEach(b=>b.addEventListener('click',open));$('#close').onclick=()=>md.classList.remove('open');md.onclick=e=>e.target==md&&md.classList.remove('open');
+addEventListener('keydown',e=>e.key=='Escape'&&md.classList.remove('open'));
+$('#send').onclick=()=>{if(!$('#nm').value.trim()||!$('#em').value.trim()){$('#nm').focus();return}$('#m1').hidden=1;$('#m2').hidden=0;setTimeout(()=>md.classList.remove('open'),2200)};
+addEventListener('scroll',()=>$('#fl').classList.toggle('show',scrollY>innerHeight*.8),{passive:true});
+/* magnetic buttons */
+if(!RM)$$('.btn.p').forEach(b=>{b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.18}px,${(e.clientY-r.top-r.height/2)*.28}px)`});b.addEventListener('mouseleave',()=>b.style.transform='')});
+agents('all');tilt();
+$$('.rv,#chart,#loop,#rule,#risk .grid').forEach(e=>io.observe(e));
+</script>
+</body>
+</html>
