@@ -283,7 +283,7 @@ function count(el){const n=+el.dataset.n;if(el._d)return;el._d=1;if(RM){el.textC
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;t.classList.add('vis');$$('[data-n]').forEach(n=>t.contains(n)&&count(n));if(t.id=='chart')t.classList.add('vis');if(t.id=='loop')runLoop();if(t.id=='rule')typeRule();t.querySelectorAll('[data-w]').forEach(m=>m.style.width=m.dataset.w+'%');io.unobserve(t)}),{threshold:.2});
 /* modal + floating cta */
 const md=$('#modal'),open=()=>{md.classList.add('open');$('#m1').hidden=0;$('#m2').hidden=1;setTimeout(()=>$('#nm').focus(),300)};
-$$('[data-get]').forEach(b=>b.addEventListener('click',open));$('#close').onclick=()=>md.classList.remove('open');md.onclick=e=>e.target==md&&md.classList.remove('open');
+$$('[data-get]').forEach(b=>b.addEventListener('click',()=>{location.href='https://app.thedeus.trade'}));$('#close').onclick=()=>md.classList.remove('open');md.onclick=e=>e.target==md&&md.classList.remove('open');
 addEventListener('keydown',e=>e.key=='Escape'&&md.classList.remove('open'));
 $('#send').onclick=()=>{if(!$('#nm').value.trim()||!$('#em').value.trim()){$('#nm').focus();return}$('#m1').hidden=1;$('#m2').hidden=0;setTimeout(()=>md.classList.remove('open'),2200)};
 addEventListener('scroll',()=>$('#fl').classList.toggle('show',scrollY>innerHeight*.8),{passive:true});
